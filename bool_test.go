@@ -1,7 +1,9 @@
 package newtype
 
 import (
+	"database/sql/driver"
 	"encoding/json"
+	"reflect"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -66,4 +68,93 @@ func TestBool(t *testing.T) {
 			assert.EqualValues(t, true, bool(check.Check))
 		})
 	})
+}
+
+func TestBool_Value(t *testing.T) {
+	tests := []struct {
+		name    string
+		b       Bool
+		want    driver.Value
+		wantErr bool
+	}{
+		{
+			name:    "Original Value",
+			b:       Bool(true),
+			want:    true,
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := tt.b.Value()
+			if (err != nil) != tt.wantErr {
+				t.Errorf("Bool.Value() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Bool.Value() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestBool_Scan(t *testing.T) {
+	type args struct {
+		value interface{}
+	}
+	tests := []struct {
+		name    string
+		b       func() *Bool
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "Nil Src",
+			b: func() *Bool {
+				b := Bool(true)
+				return &b
+			},
+			wantErr: false,
+		},
+		{
+			name: "Error Unknown String",
+			b: func() *Bool {
+				b := Bool(true)
+				return &b
+			},
+			args: args{
+				value: "hello",
+			},
+			wantErr: true,
+		},
+		{
+			name: "Src Is Bool",
+			b: func() *Bool {
+				b := Bool(true)
+				return &b
+			},
+			args: args{
+				value: true,
+			},
+			wantErr: false,
+		},
+		{
+			name: "Src Is Integer",
+			b: func() *Bool {
+				b := Bool(true)
+				return &b
+			},
+			args: args{
+				value: true,
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if err := tt.b().Scan(tt.args.value); (err != nil) != tt.wantErr {
+				t.Errorf("Bool.Scan() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
 }
