@@ -37,7 +37,7 @@ func (b Bool) Value() (driver.Value, error) {
 // Scan implements the Scanner interface.
 func (b *Bool) Scan(value interface{}) (err error) {
 	if value == nil {
-		b = nil
+		*b = Bool(false)
 		return
 	}
 	var boolVal driver.Value
