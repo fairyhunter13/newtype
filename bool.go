@@ -47,3 +47,19 @@ func (b *Bool) Scan(value interface{}) (err error) {
 	}
 	return
 }
+
+// FromDB implementing Conversion interface for xorm.
+func (b *Bool) FromDB(value []byte) (err error) {
+	err = b.Scan(value)
+	return
+}
+
+// ToDB implementing Conversion interface for xorm.
+func (b Bool) ToDB() (val []byte, err error) {
+	if bool(b) {
+		val = []byte{1}
+	} else {
+		val = []byte{0}
+	}
+	return
+}
