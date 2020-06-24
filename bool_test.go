@@ -15,12 +15,12 @@ func TestBool(t *testing.T) {
 	}
 	t.Run("TestMarshal", func(t *testing.T) {
 		t.Run("MarshalSucceed_BoolTrue", func(t *testing.T) {
-			check := test{true}
+			check := test{Bool{true}}
 			res, _ := json.Marshal(check)
 			assert.EqualValues(t, `{"check":true}`, string(res))
 		})
 		t.Run("MarshalSucceed_BoolFalse", func(t *testing.T) {
-			check := test{false}
+			check := test{Bool{false}}
 			res, _ := json.Marshal(check)
 			assert.EqualValues(t, `{"check":false}`, string(res))
 		})
@@ -37,35 +37,35 @@ func TestBool(t *testing.T) {
 			var check test
 			err := json.Unmarshal(payload, &check)
 			assert.Nil(t, err)
-			assert.EqualValues(t, true, bool(check.Check))
+			assert.EqualValues(t, true, bool(check.Check.bool))
 		})
 		t.Run("UnmarshalSucceed_Bool", func(t *testing.T) {
 			payload := []byte(`{"check": true}`)
 			var check test
 			err := json.Unmarshal(payload, &check)
 			assert.Nil(t, err)
-			assert.EqualValues(t, true, bool(check.Check))
+			assert.EqualValues(t, true, bool(check.Check.bool))
 		})
 		t.Run("UnmarshalSucceed_StringBool", func(t *testing.T) {
 			payload := []byte(`{"check": "true"}`)
 			var check test
 			err := json.Unmarshal(payload, &check)
 			assert.Nil(t, err)
-			assert.EqualValues(t, true, bool(check.Check))
+			assert.EqualValues(t, true, bool(check.Check.bool))
 		})
 		t.Run("UnmarshalSucceed_StringBool_t", func(t *testing.T) {
 			payload := []byte(`{"check": "t"}`)
 			var check test
 			err := json.Unmarshal(payload, &check)
 			assert.Nil(t, err)
-			assert.EqualValues(t, true, bool(check.Check))
+			assert.EqualValues(t, true, bool(check.Check.bool))
 		})
 		t.Run("UnmarshalSucceed_StringNumber", func(t *testing.T) {
 			payload := []byte(`{"check": "1"}`)
 			var check test
 			err := json.Unmarshal(payload, &check)
 			assert.Nil(t, err)
-			assert.EqualValues(t, true, bool(check.Check))
+			assert.EqualValues(t, true, bool(check.Check.bool))
 		})
 	})
 }
@@ -79,7 +79,7 @@ func TestBool_Value(t *testing.T) {
 	}{
 		{
 			name:    "Original Value",
-			b:       Bool(true),
+			b:       Bool{true},
 			want:    true,
 			wantErr: false,
 		},
@@ -111,7 +111,7 @@ func TestBool_Scan(t *testing.T) {
 		{
 			name: "Nil Src",
 			b: func() *Bool {
-				b := Bool(true)
+				b := Bool{true}
 				return &b
 			},
 			wantErr: false,
@@ -119,7 +119,7 @@ func TestBool_Scan(t *testing.T) {
 		{
 			name: "Error Unknown String",
 			b: func() *Bool {
-				b := Bool(true)
+				b := Bool{true}
 				return &b
 			},
 			args: args{
@@ -130,7 +130,7 @@ func TestBool_Scan(t *testing.T) {
 		{
 			name: "Src Is Bool",
 			b: func() *Bool {
-				b := Bool(true)
+				b := Bool{true}
 				return &b
 			},
 			args: args{
@@ -141,7 +141,7 @@ func TestBool_Scan(t *testing.T) {
 		{
 			name: "Src Is Integer",
 			b: func() *Bool {
-				b := Bool(true)
+				b := Bool{true}
 				return &b
 			},
 			args: args{
