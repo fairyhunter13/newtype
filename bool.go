@@ -9,7 +9,7 @@ import (
 
 // Bool is a custom defined type for bool.
 type Bool struct {
-	bool
+	Original bool
 }
 
 // UnmarshalJSON implementing UnmarshalJSON interface.
@@ -27,13 +27,13 @@ func (b *Bool) UnmarshalJSON(payload []byte) (err error) {
 
 // MarshalJSON implements the MarshalJSON interface.
 func (b Bool) MarshalJSON() (result []byte, err error) {
-	result, err = json.Marshal(b.bool)
+	result, err = json.Marshal(b.Original)
 	return
 }
 
 // Value implements the driver Valuer interface.
 func (b Bool) Value() (driver.Value, error) {
-	return b.bool, nil
+	return b.Original, nil
 }
 
 // Scan implements the Scanner interface.

@@ -37,35 +37,35 @@ func TestBool(t *testing.T) {
 			var check test
 			err := json.Unmarshal(payload, &check)
 			assert.Nil(t, err)
-			assert.EqualValues(t, true, bool(check.Check.bool))
+			assert.EqualValues(t, true, bool(check.Check.Original))
 		})
 		t.Run("UnmarshalSucceed_Bool", func(t *testing.T) {
 			payload := []byte(`{"check": true}`)
 			var check test
 			err := json.Unmarshal(payload, &check)
 			assert.Nil(t, err)
-			assert.EqualValues(t, true, bool(check.Check.bool))
+			assert.EqualValues(t, true, bool(check.Check.Original))
 		})
 		t.Run("UnmarshalSucceed_StringBool", func(t *testing.T) {
 			payload := []byte(`{"check": "true"}`)
 			var check test
 			err := json.Unmarshal(payload, &check)
 			assert.Nil(t, err)
-			assert.EqualValues(t, true, bool(check.Check.bool))
+			assert.EqualValues(t, true, bool(check.Check.Original))
 		})
 		t.Run("UnmarshalSucceed_StringBool_t", func(t *testing.T) {
 			payload := []byte(`{"check": "t"}`)
 			var check test
 			err := json.Unmarshal(payload, &check)
 			assert.Nil(t, err)
-			assert.EqualValues(t, true, bool(check.Check.bool))
+			assert.EqualValues(t, true, bool(check.Check.Original))
 		})
 		t.Run("UnmarshalSucceed_StringNumber", func(t *testing.T) {
 			payload := []byte(`{"check": "1"}`)
 			var check test
 			err := json.Unmarshal(payload, &check)
 			assert.Nil(t, err)
-			assert.EqualValues(t, true, bool(check.Check.bool))
+			assert.EqualValues(t, true, bool(check.Check.Original))
 		})
 	})
 }
