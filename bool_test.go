@@ -158,3 +158,81 @@ func TestBool_Scan(t *testing.T) {
 		})
 	}
 }
+
+func TestBool_FromDB(t *testing.T) {
+	type args struct {
+		value []byte
+	}
+	tests := []struct {
+		name    string
+		b       *Bool
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "Invalid value",
+			b:    new(Bool),
+			args: args{
+				value: []byte("invalid"),
+			},
+			wantErr: true,
+		},
+		{
+			name: "True value",
+			b:    new(Bool),
+			args: args{
+				value: []byte("true"),
+			},
+			wantErr: false,
+		},
+		{
+			name: "True value",
+			b:    new(Bool),
+			args: args{
+				value: []byte("1"),
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if err := tt.b.FromDB(tt.args.value); (err != nil) != tt.wantErr {
+				t.Errorf("Bool.FromDB() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
+
+func TestBool_ToDB(t *testing.T) {
+	tests := []struct {
+		name    string
+		b       Bool
+		wantVal []byte
+		wantErr bool
+	}{
+		{
+			name:    "True result of byte",
+			b:       Bool(true),
+			wantVal: []byte("1"),
+			wantErr: false,
+		},
+		{
+			name:    "False result of byte",
+			b:       Bool(false),
+			wantVal: []byte("0"),
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			gotVal, err := tt.b.ToDB()
+			if (err != nil) != tt.wantErr {
+				t.Errorf("Bool.ToDB() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(gotVal, tt.wantVal) {
+				t.Errorf("Bool.ToDB() = %v, want %v", gotVal, tt.wantVal)
+			}
+		})
+	}
+}
