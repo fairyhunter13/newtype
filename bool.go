@@ -20,7 +20,7 @@ type Bool bool
 
 // UnmarshalJSON implementing UnmarshalJSON interface.
 func (b *Bool) UnmarshalJSON(payload []byte) (err error) {
-	if isNullJSON(payload) {
+	if IsNullJSON(payload) {
 		return
 	}
 
