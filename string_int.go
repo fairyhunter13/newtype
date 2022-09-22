@@ -36,15 +36,11 @@ func (s IntString) IntOnly() int {
 
 // UnmarshalJSON implements the json.Unmarshaler interface.
 func (s *IntString) UnmarshalJSON(payload []byte) (err error) {
-	if isNull(payload) {
+	if isNullJSON(payload) {
 		return
 	}
 
-	if isString(payload) {
-		payload = payload[1 : len(payload)-1]
-	}
-
-	*s = IntString(payload)
+	*s = IntString(removeQuotesJSON(payload))
 	return
 }
 
