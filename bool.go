@@ -1,10 +1,18 @@
 package newtype
 
 import (
+	"database/sql"
 	"database/sql/driver"
 	"encoding/json"
 	"strconv"
 	"strings"
+)
+
+var (
+	_ json.Unmarshaler = new(Bool)
+	_ json.Marshaler   = Bool(false)
+	_ driver.Valuer    = Bool(false)
+	_ sql.Scanner      = new(Bool)
 )
 
 // Bool is a custom defined type for bool.
@@ -12,6 +20,10 @@ type Bool bool
 
 // UnmarshalJSON implementing UnmarshalJSON interface.
 func (b *Bool) UnmarshalJSON(payload []byte) (err error) {
+	if isNull(payload) {
+		return
+	}
+
 	var value string
 	value = strings.ToLower(strings.Trim(string(payload), `"`))
 	var original bool
@@ -19,6 +31,7 @@ func (b *Bool) UnmarshalJSON(payload []byte) (err error) {
 	if err != nil {
 		return
 	}
+
 	*b = Bool(original)
 	return
 }
@@ -37,9 +50,10 @@ func (b Bool) Value() (driver.Value, error) {
 // Scan implements the Scanner interface.
 func (b *Bool) Scan(value interface{}) (err error) {
 	if value == nil {
-		*b = Bool(false)
+		*b = false
 		return
 	}
+
 	var boolVal driver.Value
 	boolVal, err = driver.Bool.ConvertValue(value)
 	if err == nil {

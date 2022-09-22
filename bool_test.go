@@ -32,6 +32,13 @@ func TestBool(t *testing.T) {
 			err := json.Unmarshal(payload, &check)
 			assert.NotNil(t, err)
 		})
+		t.Run("UnmarshalSucceed_null", func(t *testing.T) {
+			payload := []byte(`{"check": null}`)
+			var check test
+			err := json.Unmarshal(payload, &check)
+			assert.Nil(t, err)
+			assert.EqualValues(t, false, bool(check.Check))
+		})
 		t.Run("UnmarshalSucceed_Number", func(t *testing.T) {
 			payload := []byte(`{"check": 1}`)
 			var check test
