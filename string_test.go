@@ -7,10 +7,10 @@ import (
 	"testing"
 )
 
-func TestIntString_Int(t *testing.T) {
+func TestString_Int(t *testing.T) {
 	tests := []struct {
 		name    string
-		s       IntString
+		s       String
 		want    int
 		wantErr assert.ErrorAssertionFunc
 	}{
@@ -32,10 +32,10 @@ func TestIntString_Int(t *testing.T) {
 	}
 }
 
-func TestIntString_IntOnly(t *testing.T) {
+func TestString_IntOnly(t *testing.T) {
 	tests := []struct {
 		name string
-		s    IntString
+		s    String
 		want int
 	}{
 		{
@@ -51,10 +51,10 @@ func TestIntString_IntOnly(t *testing.T) {
 	}
 }
 
-func TestIntString_MarshalJSON(t *testing.T) {
+func TestString_MarshalJSON(t *testing.T) {
 	tests := []struct {
 		name    string
-		s       IntString
+		s       String
 		wantRes []byte
 		wantErr assert.ErrorAssertionFunc
 	}{
@@ -76,13 +76,13 @@ func TestIntString_MarshalJSON(t *testing.T) {
 	}
 }
 
-func TestIntString_Scan(t *testing.T) {
+func TestString_Scan(t *testing.T) {
 	type args struct {
 		value interface{}
 	}
 	tests := []struct {
 		name    string
-		s       IntString
+		s       String
 		args    args
 		wantErr assert.ErrorAssertionFunc
 	}{
@@ -118,10 +118,10 @@ func TestIntString_Scan(t *testing.T) {
 	}
 }
 
-func TestIntString_String(t *testing.T) {
+func TestString_String(t *testing.T) {
 	tests := []struct {
 		name string
-		s    IntString
+		s    String
 		want string
 	}{
 		{
@@ -137,13 +137,13 @@ func TestIntString_String(t *testing.T) {
 	}
 }
 
-func TestIntString_UnmarshalJSON(t *testing.T) {
+func TestString_UnmarshalJSON(t *testing.T) {
 	type args struct {
 		payload []byte
 	}
 	tests := []struct {
 		name    string
-		s       IntString
+		s       String
 		args    args
 		wantErr assert.ErrorAssertionFunc
 	}{
@@ -179,10 +179,10 @@ func TestIntString_UnmarshalJSON(t *testing.T) {
 	}
 }
 
-func TestIntString_Value(t *testing.T) {
+func TestString_Value(t *testing.T) {
 	tests := []struct {
 		name    string
-		s       IntString
+		s       String
 		wantRes driver.Value
 		wantErr assert.ErrorAssertionFunc
 	}{
@@ -200,6 +200,50 @@ func TestIntString_Value(t *testing.T) {
 				return
 			}
 			assert.Equalf(t, tt.wantRes, gotRes, "Value()")
+		})
+	}
+}
+
+func TestString_Uint(t *testing.T) {
+	tests := []struct {
+		name    string
+		s       String
+		want    uint64
+		wantErr assert.ErrorAssertionFunc
+	}{
+		{
+			name:    "success uint",
+			s:       "50",
+			want:    50,
+			wantErr: assert.NoError,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := tt.s.Uint()
+			if !tt.wantErr(t, err, fmt.Sprintf("Uint()")) {
+				return
+			}
+			assert.Equalf(t, tt.want, got, "Uint()")
+		})
+	}
+}
+
+func TestString_UintOnly(t *testing.T) {
+	tests := []struct {
+		name string
+		s    String
+		want uint64
+	}{
+		{
+			name: "success",
+			s:    "50",
+			want: 50,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, tt.s.UintOnly(), "UintOnly()")
 		})
 	}
 }
